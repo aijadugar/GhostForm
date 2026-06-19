@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GhostForm Settings</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: #ffffff;
+      color: #171728;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    main {
+      max-width: 560px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+
+    h1 {
+      margin: 0 0 24px;
+      color: #7f77dd;
+      font-size: 26px;
+    }
+
+    section {
+      padding: 24px 0;
+      border-top: 1px solid #e6e6ef;
+    }
+
+    h2 {
+      margin: 0 0 8px;
+      font-size: 18px;
+    }
+
+    p {
+      margin: 0 0 14px;
+      color: #606076;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .field-row,
+    .action-row,
+    .vault-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    input {
+      width: 100%;
+      height: 40px;
+      padding: 0 12px;
+      border: 1px solid #cfcfe0;
+      border-radius: 8px;
+      color: #171728;
+      font: inherit;
+    }
+
+    button,
+    .link-button {
+      height: 40px;
+      padding: 0 14px;
+      border: 0;
+      border-radius: 8px;
+      background: #7f77dd;
+      color: #ffffff;
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    button.secondary {
+      border: 1px solid #cfcfe0;
+      background: #ffffff;
+      color: #171728;
+    }
+
+    button.danger {
+      height: 32px;
+      background: #fff0f2;
+      color: #c5243f;
+    }
+
+    button:disabled {
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+
+    .save-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .feedback {
+      min-height: 18px;
+      color: #198f45;
+      font-size: 13px;
+    }
+
+    .feedback.error {
+      color: #c5243f;
+    }
+
+    .plan-badge {
+      display: inline-flex;
+      align-items: center;
+      min-height: 32px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: #f0f0f6;
+      color: #303041;
+      font-weight: 700;
+    }
+
+    .plan-badge.pro {
+      background: #7f77dd;
+      color: #ffffff;
+    }
+
+    .plan-actions {
+      margin-top: 14px;
+    }
+
+    a {
+      color: #675ed1;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .license-form {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .vault-list {
+      display: grid;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .vault-row {
+      justify-content: space-between;
+      min-height: 44px;
+      padding: 8px 0;
+      border-bottom: 1px solid #eeeef5;
+    }
+
+    .domain {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .empty {
+      color: #77778a;
+      font-size: 14px;
+    }
+
+    .usage-value {
+      margin-top: 8px;
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .note {
+      margin-top: 6px;
+      color: #77778a;
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>GhostForm Settings</h1>
+
+    <section>
+      <h2>Anthropic API Key</h2>
+      <p>GhostForm uses Claude to generate personas. Get your free key at console.anthropic.com</p>
+      <div class="field-row">
+        <input id="apiKeyInput" type="password" autocomplete="off">
+        <button id="toggleApiKeyBtn" class="secondary" type="button">Show</button>
+      </div>
+      <div class="save-row">
+        <button id="saveApiKeyBtn" type="button">Save key</button>
+        <div id="apiKeyFeedback" class="feedback"></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Your Plan</h2>
+      <div id="planBadge" class="plan-badge">Free — 3 fills/day</div>
+      <div id="planActions" class="plan-actions"></div>
+    </section>
+
+    <section>
+      <h2>Have a license key?</h2>
+      <div class="license-form">
+        <input id="licenseKeyInput" type="text" autocomplete="off">
+        <button id="activateLicenseBtn" type="button">Activate</button>
+      </div>
+      <div id="licenseFeedback" class="feedback"></div>
+    </section>
+
+    <section>
+      <h2>Saved Personas</h2>
+      <div id="vaultList" class="vault-list"></div>
+    </section>
+
+    <section>
+      <h2>Today's Usage</h2>
+      <div id="usageValue" class="usage-value"></div>
+      <div class="note">Reset at midnight</div>
+    </section>
+  </main>
+
+  <script src="../vault/vault.js"></script>
+  <script src="options.js"></script>
+</body>
+</html>
