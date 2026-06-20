@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -94,6 +95,15 @@
       opacity: 0.6;
     }
 
+    select {
+      width: 100%;
+      height: 40px;
+      padding: 0 12px;
+      border: 1px solid #cfcfe0;
+      border-radius: 8px;
+      font: inherit;
+    }
+
     .save-row {
       display: flex;
       align-items: center;
@@ -185,13 +195,25 @@
     }
   </style>
 </head>
+
 <body>
   <main>
     <h1>GhostForm Settings</h1>
 
     <section>
-      <h2>Anthropic API Key</h2>
-      <p>GhostForm uses Claude to generate personas. Get your free key at console.anthropic.com</p>
+      <h2>AI Provider</h2>
+      <p>Select the model provider GhostForm should use.</p>
+
+      <div class="field-row">
+        <select id="providerSelect">
+          <option value="anthropic">Claude (Anthropic)</option>
+          <option value="gemini">Gemini (Google)</option>
+        </select>
+      </div>
+
+      <div style="margin-top:12px">
+        <input id="apiKeyInput" type="password" autocomplete="off" placeholder="Enter API key">
+      </div>
       <div class="field-row">
         <input id="apiKeyInput" type="password" autocomplete="off">
         <button id="toggleApiKeyBtn" class="secondary" type="button">Show</button>
@@ -232,4 +254,5 @@
   <script src="../vault/vault.js"></script>
   <script src="options.js"></script>
 </body>
+
 </html>
