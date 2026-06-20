@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GhostForm</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      width: 320px;
+      margin: 0;
+      padding: 16px;
+      background: #0f0f1a;
+      color: #ffffff;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .title {
+      color: #7f77dd;
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .badge {
+      min-width: 44px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: #303041;
+      color: #d8d8e8;
+      font-size: 12px;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .badge.pro {
+      background: #7f77dd;
+      color: #ffffff;
+    }
+
+    .status,
+    .usage,
+    .footer {
+      color: #a6a6b8;
+      font-size: 13px;
+    }
+
+    .error {
+      display: none;
+      margin-top: 10px;
+      color: #ff6b7a;
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    .persona-card {
+      display: none;
+      margin-top: 14px;
+      padding: 12px;
+      border: 1px solid #2a2a4a;
+      border-radius: 8px;
+      background: #171728;
+    }
+
+    .persona-card.visible {
+      display: block;
+    }
+
+    .persona-row {
+      display: grid;
+      grid-template-columns: 52px 1fr 30px;
+      align-items: center;
+      gap: 8px;
+      min-height: 30px;
+      border-bottom: 1px solid #252542;
+      font-size: 13px;
+    }
+
+    .persona-row:last-of-type {
+      border-bottom: 0;
+    }
+
+    .persona-label {
+      color: #a6a6b8;
+    }
+
+    .persona-value {
+      overflow: hidden;
+      color: #ffffff;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .copy-btn {
+      width: 28px;
+      height: 28px;
+      border: 0;
+      border-radius: 6px;
+      background: transparent;
+      color: #ffffff;
+      cursor: pointer;
+    }
+
+    .saved-note {
+      display: none;
+      margin-top: 10px;
+      color: #55d681;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .saved-note.visible {
+      display: block;
+    }
+
+    .actions {
+      display: grid;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    button {
+      font: inherit;
+    }
+
+    .primary-btn,
+    .secondary-btn {
+      width: 100%;
+      border-radius: 8px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .primary-btn {
+      height: 40px;
+      border: 0;
+      background: #7f77dd;
+      color: #ffffff;
+    }
+
+    .secondary-btn {
+      height: 36px;
+      border: 1px solid #7f77dd;
+      background: transparent;
+      color: #ffffff;
+    }
+
+    .primary-btn:disabled,
+    .secondary-btn:disabled {
+      cursor: not-allowed;
+      opacity: 0.45;
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      margin-right: 8px;
+      border: 2px solid rgba(255, 255, 255, 0.35);
+      border-top-color: #ffffff;
+      border-radius: 50%;
+      vertical-align: -2px;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .usage {
+      margin-top: 10px;
+      line-height: 1.4;
+    }
+
+    .usage.limit {
+      color: #ffae57;
+    }
+
+    a {
+      color: #b9b4ff;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .footer {
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px solid #252542;
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="title">👻 GhostForm</div>
+    <div id="planBadge" class="badge">Free</div>
+  </header>
+
+  <div id="status" class="status">Scanning page...</div>
+  <div id="error" class="error"></div>
+
+  <section id="personaCard" class="persona-card">
+    <div class="persona-row">
+      <div class="persona-label">Name</div>
+      <div id="personaName" class="persona-value"></div>
+      <button class="copy-btn" data-copy="name" title="Copy name">📋</button>
+    </div>
+    <div class="persona-row">
+      <div class="persona-label">Email</div>
+      <div id="personaEmail" class="persona-value"></div>
+      <button class="copy-btn" data-copy="email" title="Copy email">📋</button>
+    </div>
+    <div class="persona-row">
+      <div class="persona-label">Phone</div>
+      <div id="personaPhone" class="persona-value"></div>
+      <button class="copy-btn" data-copy="phone" title="Copy phone">📋</button>
+    </div>
+    <div id="savedNote" class="saved-note">Saved for this domain ✓</div>
+  </section>
+
+  <div class="actions">
+    <button id="generateBtn" class="primary-btn">✨ Generate ghost persona</button>
+    <button id="savedBtn" class="secondary-btn" disabled>Use saved persona</button>
+  </div>
+
+  <div id="usage" class="usage"></div>
+
+  <footer class="footer">
+    <a id="settingsLink">⚙ Settings</a>
+  </footer>
+
+  <script src="../vault/vault.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>
