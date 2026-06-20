@@ -1,0 +1,525 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GhostForm Settings</title>
+  <script src="../theme/theme.js"></script>
+  <style>
+    :root {
+      --bg: #ffffff;
+      --bg2: #f5f5f5;
+      --card: #ffffff;
+      --border: #e0e0e0;
+      --text: #1a1a1a;
+      --text2: #666666;
+      --accent: #7f77dd;
+      --accent-light: #eeecfb;
+      --danger: #e53e3e;
+      --success: #38a169;
+      --shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    body.dark {
+      --bg: #0f0f1a;
+      --bg2: #1a1a2e;
+      --card: #1e1e32;
+      --border: #2a2a4a;
+      --text: #f0f0f0;
+      --text2: #a0a0c0;
+      --accent: #7f77dd;
+      --accent-light: #2a2840;
+      --shadow: 0 1px 3px rgba(0,0,0,0.4);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    main {
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 32px 20px 48px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 22px;
+    }
+
+    h1 {
+      margin: 0;
+      color: var(--accent);
+      font-size: 28px;
+    }
+
+    .theme-toggle {
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--text);
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 18px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 24px;
+      overflow-x: auto;
+    }
+
+    .tab-button {
+      height: 44px;
+      padding: 0 2px;
+      border: 0;
+      border-bottom: 3px solid var(--bg);
+      border-radius: 0;
+      background: var(--bg);
+      color: var(--text2);
+      font-weight: 700;
+    }
+
+    .tab-button.active {
+      border-bottom-color: var(--accent);
+      color: var(--text);
+    }
+
+    .tab-panel {
+      display: none;
+    }
+
+    .tab-panel.active {
+      display: block;
+    }
+
+    section {
+      margin-bottom: 24px;
+      padding: 22px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--card);
+      box-shadow: var(--shadow);
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    h2 {
+      margin: 0 0 12px;
+      font-size: 18px;
+    }
+
+    .section-header h2 {
+      margin: 0;
+    }
+
+    p,
+    .helper,
+    .note,
+    .empty {
+      color: var(--text2);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    p {
+      margin: 0 0 14px;
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .select-card {
+      position: relative;
+      min-height: 104px;
+      padding: 16px;
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      background: var(--card);
+      color: var(--text);
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .select-card.selected {
+      border-color: var(--accent);
+      background: var(--accent-light);
+    }
+
+    .select-card .title {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 800;
+    }
+
+    .select-card .description {
+      color: var(--text2);
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    .checkmark {
+      display: none;
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      color: var(--accent);
+      font-weight: 900;
+    }
+
+    .select-card.selected .checkmark {
+      display: inline;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      min-height: 22px;
+      margin-left: 8px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: var(--accent-light);
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    label {
+      display: grid;
+      gap: 6px;
+      color: var(--text2);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    input {
+      width: 100%;
+      height: 40px;
+      padding: 0 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--bg);
+      color: var(--text);
+      font: inherit;
+    }
+
+    input::placeholder {
+      color: var(--text2);
+    }
+
+    button,
+    .link-button {
+      min-height: 40px;
+      padding: 0 14px;
+      border: 0;
+      border-radius: 8px;
+      background: var(--accent);
+      color: var(--bg);
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    button.secondary {
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--text);
+    }
+
+    button.danger {
+      background: var(--danger);
+      color: var(--bg);
+    }
+
+    button.full {
+      width: 100%;
+      margin-top: 16px;
+    }
+
+    button:disabled {
+      cursor: not-allowed;
+      opacity: 0.65;
+    }
+
+    .key-row,
+    .license-form,
+    .custom-field-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: end;
+    }
+
+    .custom-field-row {
+      grid-template-columns: 1fr 1fr auto;
+      margin-top: 10px;
+    }
+
+    .feedback {
+      min-height: 20px;
+      margin-top: 10px;
+      color: var(--success);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .feedback.error {
+      color: var(--danger);
+    }
+
+    .helper {
+      margin-top: 8px;
+    }
+
+    .profile-actions {
+      margin-top: 16px;
+    }
+
+    .vault-list {
+      display: grid;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .vault-row {
+      display: grid;
+      grid-template-columns: minmax(120px, 0.4fr) minmax(0, 1fr) auto;
+      gap: 12px;
+      align-items: center;
+      min-height: 48px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .domain {
+      overflow: hidden;
+      color: var(--text);
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .persona-preview {
+      overflow: hidden;
+      color: var(--text2);
+      font-size: 13px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .plan-badge {
+      display: inline-flex;
+      align-items: center;
+      min-height: 32px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: var(--accent-light);
+      color: var(--text);
+      font-weight: 800;
+    }
+
+    .plan-badge.pro {
+      background: var(--accent);
+      color: var(--bg);
+    }
+
+    .plan-actions,
+    .usage-value {
+      margin-top: 14px;
+    }
+
+    .usage-value {
+      font-size: 16px;
+      font-weight: 800;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 680px) {
+      main {
+        padding-inline: 14px;
+      }
+
+      .card-grid,
+      .form-grid,
+      .key-row,
+      .license-form,
+      .vault-row,
+      .custom-field-row {
+        grid-template-columns: 1fr;
+      }
+
+      .topbar {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main>
+    <div class="topbar">
+      <h1>GhostForm Settings</h1>
+      <button id="theme-toggle" class="theme-toggle" type="button" title="Toggle theme">💻</button>
+    </div>
+
+    <nav class="tabs" aria-label="Settings tabs">
+      <button class="tab-button active" type="button" data-tab="ai">AI Settings</button>
+      <button class="tab-button" type="button" data-tab="profile">My Profile</button>
+      <button class="tab-button" type="button" data-tab="vault">Vault</button>
+      <button class="tab-button" type="button" data-tab="plan">Plan</button>
+    </nav>
+
+    <div id="aiTab" class="tab-panel active" data-panel="ai">
+      <section>
+        <h2>Fill Mode</h2>
+        <div class="card-grid">
+          <button class="select-card" type="button" data-fill-mode="ai">
+            <span class="checkmark">✓</span>
+            <span class="title">🤖 AI Generate</span>
+            <span class="description">Creates a fresh fake persona each time.</span>
+          </button>
+          <button class="select-card" type="button" data-fill-mode="profile">
+            <span class="checkmark">✓</span>
+            <span class="title">👤 My Profile</span>
+            <span class="description">Uses your saved real/custom details.</span>
+          </button>
+        </div>
+      </section>
+
+      <section id="providerSection">
+        <h2>AI Provider</h2>
+        <div class="card-grid">
+          <button class="select-card" type="button" data-provider="gemini">
+            <span class="checkmark">✓</span>
+            <span class="title">Gemini <span class="badge">Default</span></span>
+            <span class="description">Google Gemini 2.0 Flash.</span>
+          </button>
+          <button class="select-card" type="button" data-provider="claude">
+            <span class="checkmark">✓</span>
+            <span class="title">Claude</span>
+            <span class="description">Anthropic Claude Haiku.</span>
+          </button>
+        </div>
+      </section>
+
+      <section id="apiKeySection">
+        <h2>API Keys</h2>
+        <div class="key-row">
+          <label>
+            <span id="apiKeyLabel">Gemini API Key</span>
+            <input id="apiKeyInput" type="password" autocomplete="off">
+          </label>
+          <button id="toggleApiKeyBtn" class="secondary" type="button">Show</button>
+        </div>
+        <div class="profile-actions">
+          <button id="saveTestApiKeyBtn" type="button">Save &amp; Test</button>
+        </div>
+        <div id="apiKeyHelper" class="helper">Get your Gemini key at aistudio.google.com</div>
+        <div id="apiKeyFeedback" class="feedback"></div>
+      </section>
+    </div>
+
+    <div id="profileTab" class="tab-panel" data-panel="profile">
+      <section>
+        <h2>My Profile</h2>
+        <div class="form-grid">
+          <label>First Name <input id="firstNameInput" type="text" autocomplete="given-name"></label>
+          <label>Last Name <input id="lastNameInput" type="text" autocomplete="family-name"></label>
+          <label>Email <input id="emailInput" type="email" autocomplete="email"></label>
+          <label>Phone <input id="phoneInput" type="tel" autocomplete="tel"></label>
+          <label>Password <input id="passwordInput" type="password" autocomplete="new-password"></label>
+          <label>Username <input id="usernameInput" type="text" autocomplete="username"></label>
+          <label>House Number <input id="houseNumberInput" type="text"></label>
+          <label>Address <input id="addressInput" type="text" autocomplete="street-address"></label>
+          <label>City <input id="cityInput" type="text" autocomplete="address-level2"></label>
+          <label>State <input id="stateInput" type="text" autocomplete="address-level1"></label>
+          <label>ZIP <input id="zipInput" type="text" autocomplete="postal-code"></label>
+          <label>Country <input id="countryInput" type="text" autocomplete="country-name"></label>
+          <label>Date of Birth <input id="birthdateInput" type="date"></label>
+          <label>Company <input id="companyInput" type="text" autocomplete="organization"></label>
+        </div>
+
+        <div class="profile-actions">
+          <button id="addCustomFieldBtn" class="secondary" type="button">+ Add custom field</button>
+          <div id="customFieldsList"></div>
+          <button id="saveProfileBtn" class="full" type="button">Save Profile</button>
+          <div id="profileFeedback" class="feedback"></div>
+          <div class="note">Fields you leave empty will be filled by AI when using AI mode.</div>
+        </div>
+      </section>
+    </div>
+
+    <div id="vaultTab" class="tab-panel" data-panel="vault">
+      <section>
+        <div class="section-header">
+          <h2>Saved Personas</h2>
+          <button id="clearVaultBtn" class="danger" type="button">Clear all</button>
+        </div>
+        <div id="vaultList" class="vault-list"></div>
+      </section>
+    </div>
+
+    <div id="planTab" class="tab-panel" data-panel="plan">
+      <section>
+        <h2>Your Plan</h2>
+        <div id="planBadge" class="plan-badge">Free - 3 fills/day</div>
+        <div id="planActions" class="plan-actions"></div>
+      </section>
+
+      <section>
+        <h2>Have a license key?</h2>
+        <div class="license-form">
+          <input id="licenseKeyInput" type="text" autocomplete="off">
+          <button id="activateLicenseBtn" type="button">Activate</button>
+        </div>
+        <div id="licenseFeedback" class="feedback"></div>
+      </section>
+
+      <section>
+        <h2>Today's Usage</h2>
+        <div id="usageValue" class="usage-value"></div>
+        <div class="note">Reset at midnight</div>
+      </section>
+    </div>
+  </main>
+
+  <script src="../vault/vault.js"></script>
+  <script src="options.js"></script>
+</body>
+
+</html>

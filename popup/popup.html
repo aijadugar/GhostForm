@@ -1,0 +1,385 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GhostForm</title>
+  <script src="../theme/theme.js"></script>
+  <style>
+    :root {
+      --bg: #ffffff;
+      --card: #ffffff;
+      --border: #e0e0e0;
+      --border2: #e0e0e0;
+      --text: #1a1a1a;
+      --text2: #666666;
+      --accent: #7f77dd;
+      --accent-text: #ffffff;
+      --badge-bg: #eeecfb;
+      --badge-text: #1a1a1a;
+      --error: #e53e3e;
+      --success: #38a169;
+      --warning: #e53e3e;
+      --link: #7f77dd;
+      --profile: #3182ce;
+      --profile-light: #ebf8ff;
+      --spinner: rgba(255, 255, 255, 0.35);
+    }
+
+    body.dark {
+      --bg: #0f0f1a;
+      --card: #171728;
+      --border: #2a2a4a;
+      --border2: #252542;
+      --text: #ffffff;
+      --text2: #a6a6b8;
+      --accent: #7f77dd;
+      --accent-text: #ffffff;
+      --badge-bg: #303041;
+      --badge-text: #d8d8e8;
+      --error: #ff6b7a;
+      --success: #55d681;
+      --warning: #ffae57;
+      --link: #b9b4ff;
+      --profile: #63b3ed;
+      --profile-light: #18324f;
+      --spinner: rgba(255, 255, 255, 0.35);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      width: 320px;
+      margin: 0;
+      padding: 16px;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .header,
+    .header-actions,
+    .footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .header {
+      margin-bottom: 12px;
+    }
+
+    .title {
+      color: var(--accent);
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .badge,
+    .mode-pill,
+    .switch-pill,
+    .source-tag {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .badge {
+      min-width: 44px;
+      padding: 4px 10px;
+      background: var(--badge-bg);
+      color: var(--badge-text);
+    }
+
+    .badge.pro {
+      background: var(--accent);
+      color: var(--accent-text);
+    }
+
+    #theme-toggle {
+      padding: 0;
+      border: 0;
+      background: transparent;
+      color: var(--text);
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .status,
+    .usage,
+    .footer {
+      color: var(--text2);
+      font-size: 13px;
+    }
+
+    .mode-row {
+      margin-top: 8px;
+    }
+
+    .mode-pill {
+      min-height: 26px;
+      padding: 4px 10px;
+      border: 1px solid var(--accent);
+      background: var(--badge-bg);
+      color: var(--accent);
+      cursor: pointer;
+    }
+
+    .mode-pill.profile {
+      border-color: var(--profile);
+      background: var(--profile-light);
+      color: var(--profile);
+    }
+
+    .error {
+      display: none;
+      margin-top: 10px;
+      color: var(--error);
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    .persona-card {
+      display: none;
+      margin-top: 14px;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--card);
+    }
+
+    .persona-card.visible {
+      display: block;
+    }
+
+    .source-tag {
+      min-height: 24px;
+      margin-bottom: 8px;
+      padding: 3px 8px;
+      background: var(--badge-bg);
+      color: var(--badge-text);
+    }
+
+    .persona-row {
+      display: grid;
+      grid-template-columns: 74px 1fr 30px;
+      align-items: center;
+      gap: 8px;
+      min-height: 30px;
+      border-bottom: 1px solid var(--border2);
+      font-size: 13px;
+    }
+
+    .persona-row:last-of-type {
+      border-bottom: 0;
+    }
+
+    .persona-label {
+      overflow: hidden;
+      color: var(--text2);
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .persona-value {
+      overflow: hidden;
+      color: var(--text);
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .copy-btn {
+      width: 28px;
+      height: 28px;
+      border: 0;
+      border-radius: 6px;
+      background: transparent;
+      color: var(--text);
+      cursor: pointer;
+    }
+
+    .saved-note {
+      display: none;
+      margin-top: 10px;
+      color: var(--success);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .saved-note.visible {
+      display: block;
+    }
+
+    .actions {
+      display: grid;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    button {
+      font: inherit;
+    }
+
+    .primary-btn,
+    .secondary-btn {
+      width: 100%;
+      border-radius: 8px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .primary-btn {
+      height: 40px;
+      border: 0;
+      background: var(--accent);
+      color: var(--accent-text);
+    }
+
+    .secondary-btn {
+      height: 36px;
+      border: 1px solid var(--accent);
+      background: transparent;
+      color: var(--text);
+    }
+
+    .primary-btn:disabled,
+    .secondary-btn:disabled {
+      cursor: not-allowed;
+      opacity: 0.45;
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      margin-right: 8px;
+      border: 2px solid var(--spinner);
+      border-top-color: var(--accent-text);
+      border-radius: 50%;
+      vertical-align: -2px;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .usage {
+      margin-top: 10px;
+      line-height: 1.4;
+    }
+
+    .usage.limit {
+      color: var(--warning);
+    }
+
+    a {
+      color: var(--link);
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .footer {
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border2);
+    }
+
+    .mode-switch {
+      display: inline-flex;
+      gap: 4px;
+      padding: 3px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+    }
+
+    .switch-pill {
+      min-height: 24px;
+      padding: 0 8px;
+      border: 0;
+      background: transparent;
+      color: var(--text2);
+      cursor: pointer;
+    }
+
+    .switch-pill.active {
+      background: var(--accent);
+      color: var(--accent-text);
+    }
+
+    .switch-pill[data-mode="profile"].active {
+      background: var(--profile);
+    }
+  </style>
+</head>
+
+<body>
+  <header class="header">
+    <div class="title">GhostForm</div>
+    <div class="header-actions">
+      <div id="planBadge" class="badge">Free</div>
+      <button id="theme-toggle" title="Toggle theme">💻</button>
+    </div>
+  </header>
+
+  <div id="status" class="status">Scanning page...</div>
+  <div class="mode-row">
+    <button id="fillModePill" class="mode-pill" type="button">🤖 AI mode</button>
+  </div>
+  <div id="error" class="error"></div>
+
+  <section id="personaCard" class="persona-card">
+    <div id="sourceTag" class="source-tag">Generated by Gemini</div>
+    <div class="persona-row">
+      <div class="persona-label">Name</div>
+      <div id="personaName" class="persona-value"></div>
+      <button class="copy-btn" data-copy="name" title="Copy name">📋</button>
+    </div>
+    <div class="persona-row">
+      <div class="persona-label">Email</div>
+      <div id="personaEmail" class="persona-value"></div>
+      <button class="copy-btn" data-copy="email" title="Copy email">📋</button>
+    </div>
+    <div class="persona-row">
+      <div class="persona-label">Phone</div>
+      <div id="personaPhone" class="persona-value"></div>
+      <button class="copy-btn" data-copy="phone" title="Copy phone">📋</button>
+    </div>
+    <div id="customFieldsCard"></div>
+    <div id="savedNote" class="saved-note">Saved for this domain ✓</div>
+  </section>
+
+  <div class="actions">
+    <button id="generateBtn" class="primary-btn">✨ Generate ghost persona</button>
+    <button id="savedBtn" class="secondary-btn" disabled>Use saved persona</button>
+  </div>
+
+  <div id="usage" class="usage"></div>
+
+  <footer class="footer">
+    <a id="settingsLink">⚙ Settings</a>
+    <div class="mode-switch" aria-label="Fill mode">
+      <button class="switch-pill" type="button" data-mode="ai">AI</button>
+      <button class="switch-pill" type="button" data-mode="profile">Profile</button>
+    </div>
+  </footer>
+
+  <script src="../vault/vault.js"></script>
+  <script src="popup.js"></script>
+</body>
+
+</html>
