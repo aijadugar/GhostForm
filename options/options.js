@@ -1,5 +1,6 @@
 let currentPlan = "free";
 
+const providerSelect = document.getElementById("providerSelect");
 const apiKeyInput = document.getElementById("apiKeyInput");
 const toggleApiKeyBtn = document.getElementById("toggleApiKeyBtn");
 const saveApiKeyBtn = document.getElementById("saveApiKeyBtn");
@@ -32,6 +33,15 @@ function setButtonLoading(button, isLoading, loadingText, normalText) {
   button.disabled = isLoading;
   button.textContent = isLoading ? loadingText : normalText;
 }
+
+async function loadProvider() {
+  const provider = await Vault.getProvider();
+
+  providerSelect.value = provider || "anthropic";
+}
+providerSelect.addEventListener("change", async () => {
+  await Vault.setProvider(providerSelect.value);
+});
 
 async function loadApiKey() {
   const apiKey = await Vault.getApiKey();
@@ -200,6 +210,7 @@ async function init() {
   saveApiKeyBtn.addEventListener("click", saveApiKey);
   activateLicenseBtn.addEventListener("click", activateLicense);
 
+  await loadProvider();
   await loadApiKey();
   await loadPlan();
   await Promise.all([renderVault(), renderUsage()]);
